@@ -1,0 +1,6 @@
+1- O link do Github foi enviado via teams antes do repositório ser criado (foi criado imediatamente após as perguntas em sala).
+
+2- A única alteração feita após isso, foi no arquivo cinemadb.py (onde é definida a conexão) para retirar minha senha do postgresql.
+
+3- É isso!
+
