@@ -1,0 +1,64 @@
+CREATE TABLE cinema_cliente (
+  id_cliente int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  nome varchar(255) NOT NULL,
+  cpf varchar(11) NOT NULL UNIQUE,
+  email varchar(255) UNIQUE,
+  telefone varchar(30),
+  data_nascimento date NOT null,
+  conta_ativa boolean not null
+);
+
+CREATE TABLE cinema_filme (
+  id_filme int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  titulo varchar(255) NOT NULL,
+  genero varchar(100),
+  duracao_minutos int CHECK (duracao_minutos > 0),
+  classificacao_indicativa varchar(10)
+);
+
+CREATE TABLE cinema_sala (
+  id_sala int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  capacidade int NOT NULL CHECK (capacidade > 0),
+  nome_sala varchar(8) NOT NULL UNIQUE,
+  tipo_sala varchar(50),
+  UNIQUE (nome_sala)
+);
+
+CREATE TABLE cinema_sessao (
+  id_sessao int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  data_hora timestamp with time zone NOT NULL,
+  idioma varchar(50),
+  tipo_exibicao varchar(50),
+  id_filme int NOT NULL REFERENCES cinema_filme(id_filme),
+  id_sala int NOT NULL REFERENCES cinema_sala(id_sala),
+  UNIQUE (id_sala, data_hora)
+);
+
+CREATE TABLE cinema_ingresso (
+  id_ingresso int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  tipo_ingresso varchar(50),
+  valor numeric(10,2) CHECK (valor >= 0),
+  forma_pagamento varchar(50),
+  id_sessao int NOT NULL REFERENCES cinema_sessao(id_sessao),
+  id_cliente int REFERENCES cinema_cliente(id_cliente),
+  ingresso_ativo BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE cinema_ingresso_cancelado (
+  id_cancelamento int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id_ingresso_original int NOT NULL,
+  tipo_ingresso varchar(50),
+  valor numeric(10,2),
+  forma_pagamento varchar(50),
+  id_sessao int REFERENCES cinema_sessao(id_sessao),
+  id_cliente int REFERENCES cinema_cliente(id_cliente),
+  motivo_cancelamento TEXT NOT NULL,
+  data_cancelamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE admin_users (
+  id_admin int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  nome varchar(100) NOT NULL UNIQUE,
+  senha varchar(255) NOT NULL,
+  data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
